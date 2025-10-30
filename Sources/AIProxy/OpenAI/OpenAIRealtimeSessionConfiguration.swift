@@ -90,6 +90,9 @@ nonisolated public struct OpenAIRealtimeSessionConfiguration: Encodable, Sendabl
     /// The format of output audio.
     public let outputAudioFormat: AudioFormat?
 
+    /// Reference to a prompt template and its variables.
+    public let prompt: Prompt?
+
     /// The speed of the generated audio. Select a value from 0.25 to 4.0.
     /// Default to `1.0`
     public let speed: Float?
@@ -117,6 +120,7 @@ nonisolated public struct OpenAIRealtimeSessionConfiguration: Encodable, Sendabl
         case maxResponseOutputTokens = "max_response_output_tokens"
         case modalities
         case outputAudioFormat = "output_audio_format"
+        case prompt
         case speed
         case temperature
         case tools
@@ -132,6 +136,7 @@ nonisolated public struct OpenAIRealtimeSessionConfiguration: Encodable, Sendabl
         maxResponseOutputTokens: OpenAIRealtimeSessionConfiguration.MaxResponseOutputTokens? = nil,
         modalities: [OpenAIRealtimeSessionConfiguration.Modality]? = nil,
         outputAudioFormat: OpenAIRealtimeSessionConfiguration.AudioFormat? = nil,
+        prompt: Prompt? = nil,
         speed: Float? = 1.0,
         temperature: Double? = nil,
         tools: [OpenAIRealtimeSessionConfiguration.Tool]? = nil,
@@ -145,6 +150,7 @@ nonisolated public struct OpenAIRealtimeSessionConfiguration: Encodable, Sendabl
         self.maxResponseOutputTokens = maxResponseOutputTokens
         self.modalities = modalities
         self.outputAudioFormat = outputAudioFormat
+        self.prompt = prompt
         self.speed = speed
         self.temperature = temperature
         self.tools = tools
@@ -287,5 +293,20 @@ extension OpenAIRealtimeSessionConfiguration.TurnDetection {
         ///                continue speaking, `high` will respond more quickly.
         ///                OpenAI's default is medium
         case semanticVAD(eagerness: Eagerness)
+    }
+}
+
+extension OpenAIRealtimeSessionConfiguration {
+    nonisolated public struct Prompt: Encodable, Sendable {
+        /// The text prompt to use as a context for the model.
+        public let id: String
+        public let map: [String: String]?
+        public let version: String?
+
+        public init(id: String, map: [String: String]? = nil, version: String? = nil) {
+            self.id = id
+            self.map = map
+            self.version = version
+        }
     }
 }

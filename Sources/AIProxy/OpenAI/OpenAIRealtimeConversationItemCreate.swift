@@ -10,35 +10,23 @@ import Foundation
 /// https://platform.openai.com/docs/api-reference/realtime-client-events/conversation/item/create
 nonisolated public struct OpenAIRealtimeConversationItemCreate: Encodable {
     public let type = "conversation.item.create"
-    public let item: Item
+    public let item: OpenAIRealtimeConversationItem
 
-    public init(item: Item) {
+    public init(item: OpenAIRealtimeConversationItem) {
         self.item = item
     }
-}
 
-// MARK: -
-public extension OpenAIRealtimeConversationItemCreate {
-    struct Item: Encodable {
-        public let type = "message"
-        public let role: String
-        public let content: [Content]
-
-        public init(role: String, text: String) {
-            self.role = role
-            self.content = [.init(text: text)]
-        }
+    enum CodingKeys: String, CodingKey {
+        case type
+        case item
     }
-}
 
-// MARK: -
-public extension OpenAIRealtimeConversationItemCreate.Item {
-    struct Content: Encodable {
-        public let type = "input_text"
-        public let text: String
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
 
-        public init(text: String) {
-            self.text = text
-        }
+        // Encode the protocol-typed `item` using a superEncoder for the `item` key.
+        let itemEncoder = container.superEncoder(forKey: .item)
+        try item.encode(to: itemEncoder)
     }
 }
