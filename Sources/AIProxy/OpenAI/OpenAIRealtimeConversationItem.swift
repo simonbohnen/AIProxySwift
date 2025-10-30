@@ -2,7 +2,7 @@ public protocol OpenAIRealtimeConversationItem: Encodable {
     var type: String { get }
 }
 
-struct OpenAIRealtimeFunctionCallOutputConversationItem: OpenAIRealtimeConversationItem {
+nonisolated public struct OpenAIRealtimeFunctionCallOutputConversationItem: OpenAIRealtimeConversationItem {
     /// The ID of the function call this output is for.
     public let callID: String
 
@@ -25,7 +25,7 @@ struct OpenAIRealtimeFunctionCallOutputConversationItem: OpenAIRealtimeConversat
     }
 }
 
-struct OpenAIRealtimeUserMessageConversationItem: OpenAIRealtimeConversationItem {
+nonisolated public struct OpenAIRealtimeUserMessageConversationItem: OpenAIRealtimeConversationItem {
     public let type = "message"
     public let role: String
     public let content: [Content]
@@ -37,7 +37,7 @@ struct OpenAIRealtimeUserMessageConversationItem: OpenAIRealtimeConversationItem
 }
 
 extension OpenAIRealtimeUserMessageConversationItem {
-    struct Content: Encodable {
+    nonisolated public struct Content: Encodable {
         public let type = "input_text"
         public let text: String
         
